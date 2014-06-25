@@ -67,7 +67,7 @@ config.mk:
 		fi \
 	done
 
-config.h:
+config.h: config.def.h
 	@echo "GEN $@"
 	cp config.def.h $@
 
