@@ -68,7 +68,7 @@ $(OBJS): Makefile nsxiv.h config.h commands.h
 options.o: version.h
 window.o: icon/data.h
 
-config.h:
+config.h: config.def.h
 	@echo "GEN $@"
 	cp config.def.h $@
 
