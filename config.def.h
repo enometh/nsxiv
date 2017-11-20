@@ -74,7 +74,7 @@ static const int ignore_mask = Mod2Mask | LockMask;
 static const keymap_t keys[] = {
 	/* modifiers    key               function              argument */
 	{ 0,            XK_q,             g_quit,               None },
-	{ 0,            XK_Return,        g_switch_mode,        None },
+//	{ 0,            XK_Return,        g_switch_mode,        None },
 	{ 0,            XK_f,             g_toggle_fullscreen,  None },
 	{ 0,            XK_b,             g_toggle_bar,         None },
 	{ ControlMask,  XK_x,             g_prefix_external,    None },
@@ -140,8 +140,8 @@ static const keymap_t keys[] = {
 	{ 0,            XK_K,             i_scroll_to_edge,     DIR_UP },
 	{ 0,            XK_L,             i_scroll_to_edge,     DIR_RIGHT },
 	{ 0,            XK_equal,         i_set_zoom,           100 },
-	{ 0,            XK_w,             i_fit_to_win,         SCALE_DOWN },
-	{ 0,            XK_W,             i_fit_to_win,         SCALE_FIT },
+	{ 0,            XK_W,             i_fit_to_win,         SCALE_DOWN },
+	{ 0,            XK_w,             i_fit_to_win,         SCALE_FIT },
 	{ 0,            XK_F,             i_fit_to_win,         SCALE_FILL },
 	{ 0,            XK_e,             i_fit_to_win,         SCALE_WIDTH },
 	{ 0,            XK_E,             i_fit_to_win,         SCALE_HEIGHT },
@@ -153,6 +153,12 @@ static const keymap_t keys[] = {
 	{ 0,            XK_a,             i_toggle_antialias,   None },
 	{ 0,            XK_A,             i_toggle_alpha,       None },
 	{ 0,            XK_s,             i_slideshow,          None },
+
+	{ 0,            XK_Prior,         i_scroll,             DIR_UP },
+	{ 0,            XK_Next,          i_scroll,             DIR_DOWN },
+	{ ControlMask,  XK_Prior,         i_navigate,           -1 },
+	{ ControlMask,  XK_Next,          i_navigate,           +1 },
+
 };
 
 /* mouse button mappings for image mode: */
@@ -160,7 +166,7 @@ static const button_t buttons[] = {
 	/* modifiers    button            function              argument */
 	{ 0,            1,                i_cursor_navigate,    None },
 	{ 0,            2,                i_drag,               DRAG_ABSOLUTE },
-	{ 0,            3,                g_switch_mode,        None },
+//	{ 0,            3,                g_switch_mode,        None },
 	{ 0,            4,                g_zoom,               +1 },
 	{ 0,            5,                g_zoom,               -1 },
 };
