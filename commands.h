@@ -32,6 +32,7 @@ bool ci_rotate(arg_t);
 bool ci_scroll(arg_t);
 bool ci_scroll_to_edge(arg_t);
 bool ci_set_zoom(arg_t);
+bool ci_set_zoom_toggle(arg_t);
 bool ci_slideshow(arg_t);
 bool ci_toggle_alpha(arg_t);
 bool ci_toggle_animation(arg_t);
@@ -71,6 +72,7 @@ bool ct_reload_all(arg_t);
 #define i_scroll { ci_scroll, MODE_IMAGE }
 #define i_scroll_to_edge { ci_scroll_to_edge, MODE_IMAGE }
 #define i_set_zoom { ci_set_zoom, MODE_IMAGE }
+#define i_set_zoom_toggle { ci_set_zoom_toggle, MODE_IMAGE }
 #define i_slideshow { ci_slideshow, MODE_IMAGE }
 #define i_toggle_alpha { ci_toggle_alpha, MODE_IMAGE }
 #define i_toggle_animation { ci_toggle_animation, MODE_IMAGE }

@@ -378,6 +378,19 @@ bool ci_set_zoom(arg_t zl)
 	return img_zoom_to(&img, (prefix ? prefix : zl) / 100.0);
 }
 
+bool ci_set_zoom_toggle(arg_t zl)
+{
+	static int dozoom = 0;
+	static scalemode_t last_scalemode;
+
+	dozoom = 1 - dozoom;
+	if (dozoom) {
+		last_scalemode = img.scalemode;
+		return img_zoom(&img, (prefix ? prefix : zl) / 100.0);
+	} else
+		return img_fit_win(&img, last_scalemode);
+}
+
 bool ci_fit_to_win(arg_t sm)
 {
 	return img_fit_win(&img, sm);
