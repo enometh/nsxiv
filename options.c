@@ -44,6 +44,7 @@ void print_usage(FILE *stream)
 	fprintf(stream,
 	        "usage: %s [-abcfhiopqrtvZ0] [-A FRAMERATE] [-e WID] [-G GAMMA] "
 	        "[-g GEOMETRY] [-N NAME] [-n NUM] [-S DELAY] [-s MODE] "
+	       "[-R ROTATE=1,2,3 ]\n"
 	        "[-z ZOOM] FILES...\n",
 	        progname);
 }
@@ -109,6 +110,7 @@ void parse_options(int argc, char **argv)
 		{ "private",        'p',     OPTPARSE_NONE },
 		{ "quiet",          'q',     OPTPARSE_NONE },
 		{ "recursive",      'r',     OPTPARSE_NONE },
+		{ "rotate",         'R',     OPTPARSE_REQUIRED },
 		{ "ss-delay",       'S',     OPTPARSE_REQUIRED },
 		{ "scale-mode",     's',     OPTPARSE_REQUIRED },
 		/* short opt `-t` doesn't accept optional arg for backwards compatibility reasons */
@@ -148,6 +150,7 @@ void parse_options(int argc, char **argv)
 	_options.gamma = 0;
 	_options.slideshow = 0;
 	_options.framerate = 0;
+	_options.rotate = 0;
 
 	_options.fullscreen = false;
 	_options.embed = 0;
@@ -242,6 +245,12 @@ void parse_options(int argc, char **argv)
 			break;
 		case 'r':
 			_options.recursive = true;
+			break;
+		case 'R':
+			n = strtol(optarg, &end, 0);
+			if (*end != '\0')
+				error(EXIT_FAILURE, 0, "Invalid argument for option -R: %s", optarg);
+			_options.rotate = n;
 			break;
 		case 'S':
 			f = strtof(op.optarg, &end) * 10.0f;

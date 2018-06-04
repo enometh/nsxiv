@@ -298,6 +298,7 @@ bool img_load(img_t *img, const fileinfo_t *file)
 #if HAVE_LIBEXIF && !defined(IMLIB2_VERSION)
 	exif_auto_orientate(file);
 #endif
+	if (options->rotate) imlib_image_orientate(options->rotate);
 
 #if HAVE_IMLIB2_MULTI_FRAME
 	animated = img_load_multiframe(img, file);
