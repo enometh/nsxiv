@@ -32,6 +32,7 @@ void print_usage(void)
 {
 	printf("usage: nsxiv [-abcfhiopqrtvZ0] [-A FRAMERATE] [-e WID] [-G GAMMA] "
 	       "[-g GEOMETRY] [-N NAME] [-T TITLE] [-n NUM] [-S DELAY] [-s MODE] "
+	       "[-R ROTATE=1,2,3 ]\n"
 	       "[-z ZOOM] FILES...\n");
 }
 
@@ -63,6 +64,7 @@ void parse_options(int argc, char **argv)
 	_options.gamma = 0;
 	_options.slideshow = 0;
 	_options.framerate = 0;
+	_options.rotate = 0;
 
 	_options.fullscreen = false;
 	_options.embed = 0;
@@ -77,7 +79,7 @@ void parse_options(int argc, char **argv)
 	_options.clean_cache = false;
 	_options.private_mode = false;
 
-	while ((opt = getopt(argc, argv, "A:abce:fG:g:hin:N:opqrS:s:T:tvZz:0")) != -1) {
+	while ((opt = getopt(argc, argv, "A:abce:fG:g:hin:N:opqrR:S:s:T:tvZz:0")) != -1) {
 		switch (opt) {
 			case '?':
 				print_usage();
@@ -142,6 +144,13 @@ void parse_options(int argc, char **argv)
 			case 'r':
 				_options.recursive = true;
 				break;
+			case 'R':
+				n = strtol(optarg, &end, 0);
+				if (*end != '\0')
+					error(EXIT_FAILURE, 0, "Invalid argument for option -R: %s", optarg);
+				_options.rotate = n;
+				break;
+
 			case 'S':
 				n = strtof(optarg, &end) * 10;
 				if (*end != '\0' || n <= 0)
