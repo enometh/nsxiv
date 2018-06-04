@@ -287,6 +287,8 @@ bool img_load(img_t *img, const fileinfo_t *file)
 	 */
 	imlib_image_set_changes_on_disk();
 
+	if (options->rotate) imlib_image_orientate(options->rotate);
+
 	animated = img_load_multiframe(img, file);
 
 	(void)fmt; /* maybe unused */

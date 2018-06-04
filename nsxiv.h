@@ -257,6 +257,7 @@ struct opt {
 	int gamma;
 	unsigned int slideshow;
 	int framerate;
+	int rotate;
 
 	/* window: */
 	bool fullscreen;

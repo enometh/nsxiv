@@ -22,6 +22,8 @@ nsxiv \- Neo Simple X Image Viewer
 .IR MODE ]
 .RB [ \-z
 .IR ZOOM ]
+.RB [ \-R
+.IR ROTATE=1,2,3 ]
 .IR FILE ...
 .SH DESCRIPTION
 nsxiv is a simple image viewer for X.
@@ -94,6 +96,9 @@ Enable private mode, in which nsxiv does not write any cache or temporary files.
 .TP
 .B "\-q, \-\-quiet"
 Be quiet, and disable warnings to standard error stream.
+.TP
+.B \-R ROTATE=1,2,3
+Rotate images at startup: clockwise by 1=90, 2=180, 3=270 degrees.
 .TP
 .B "\-r, \-\-recursive"
 Search the given directories recursively for images to view.
