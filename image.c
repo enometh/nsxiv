@@ -331,6 +331,7 @@ bool img_load(img_t *img, const fileinfo_t *file)
 #if HAVE_LIBEXIF
 	exif_auto_orientate(file);
 #endif
+	if (options->rotate) imlib_image_orientate(options->rotate);
 
 	if ((fmt = imlib_image_format()) != NULL) {
 #if HAVE_LIBGIF
