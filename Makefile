@@ -19,7 +19,7 @@ HAVE_LIBEXIF ?= $(OPT_DEP_DEFAULT)
 HAVE_LIBWEBP ?= $(OPT_DEP_DEFAULT)
 
 # CFLAGS, any optimization flags goes here
-CFLAGS ?= -std=c99 -Wall -pedantic
+CFLAGS ?= -std=c99 -Wall -pedantic -g3
 
 # icons that will be installed via `make icon`
 ICONS = 16x16.png 32x32.png 48x48.png 64x64.png 128x128.png
@@ -105,7 +105,8 @@ uninstall-icon:
 		rm -f "$$dir/nsxiv.png"; \
 	done
 
-install: all
+
+install:
 	@echo "INSTALL bin/nsxiv"
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp nsxiv $(DESTDIR)$(PREFIX)/bin/
