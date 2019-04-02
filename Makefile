@@ -78,7 +78,7 @@ uninstall-icon:
 		rm -f "$$dir/nsxiv.png"; \
 	done
 
-install: all
+install:
 	@echo "INSTALL bin/nsxiv"
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp nsxiv $(DESTDIR)$(PREFIX)/bin/
