@@ -15,6 +15,7 @@ bool cg_quit(arg_t);
 bool cg_pick_quit(arg_t);
 bool cg_reload_image(arg_t);
 bool cg_remove_image(arg_t);
+bool cg_delete_image(arg_t);
 bool cg_reverse_marks(arg_t);
 bool cg_scroll_screen(arg_t);
 bool cg_switch_mode(arg_t);
@@ -62,6 +63,7 @@ bool ct_select(arg_t);
 #define g_pick_quit { cg_pick_quit, MODE_ALL }
 #define g_reload_image { cg_reload_image, MODE_ALL }
 #define g_remove_image { cg_remove_image, MODE_ALL }
+#define g_delete_image { cg_delete_image, MODE_ALL }
 #define g_reverse_marks { cg_reverse_marks, MODE_ALL }
 #define g_scroll_screen { cg_scroll_screen, MODE_ALL }
 #define g_switch_mode { cg_switch_mode, MODE_ALL }
