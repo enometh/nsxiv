@@ -19,6 +19,7 @@
 
 #include "nsxiv.h"
 
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -134,6 +135,24 @@ bool cg_reload_image(arg_t _)
 
 bool cg_remove_image(arg_t _)
 {
+	remove_file(fileidx, true);
+	if (mode == MODE_IMAGE)
+		load_image(fileidx);
+	else
+		tns.dirty = true;
+	return true;
+}
+
+bool cg_delete_image(arg_t _)
+{
+	const char *path = files[fileidx].path;
+	if (unlink(path) < 0) {
+		fprintf(stderr, "failed to remove %s: %s\n", path,
+			strerror(errno));
+		return false;
+	} else
+		fprintf(stderr, "removed %s\n", path);
+
 	remove_file(fileidx, true);
 	if (mode == MODE_IMAGE)
 		load_image(fileidx);
