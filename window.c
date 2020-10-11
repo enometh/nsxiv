@@ -74,6 +74,9 @@ static int ellipsis_w;
 static int win_draw_text(win_t *, XftDraw *, const XftColor *, int, int, char *, int, int);
 #endif
 
+static Bool fs_support;
+static Bool fs_warned;
+
 #if HAVE_LIBFONTS
 static void win_init_font(const win_env_t *e, const char *fontstr)
 {
@@ -83,6 +86,36 @@ static void win_init_font(const win_env_t *e, const char *fontstr)
 	fontheight = font->ascent + font->descent;
 	FcPatternGetDouble(font->pattern, FC_SIZE, 0, &fontsize);
 	barheight = fontheight + 2 * V_TEXT_PAD;
+}
+
+void win_check_wm_support(Display *dpy, Window root)
+{
+	int format;
+	long offset = 0, length = 16;
+	Atom *data, type;
+	unsigned long i, nitems, bytes_left;
+	Bool found = False;
+
+	while (!found && length > 0) {
+		if (XGetWindowProperty(dpy, root, atoms[ATOM__NET_SUPPORTED],
+		                       offset, length, False, XA_ATOM, &type, &format,
+		                       &nitems, &bytes_left, (unsigned char**) &data))
+		{
+			break;
+		}
+		if (type == XA_ATOM && format == 32) {
+			for (i = 0; i < nitems; i++) {
+				if (data[i] == atoms[ATOM__NET_WM_STATE_FULLSCREEN]) {
+					found = True;
+					fs_support = True;
+					break;
+				}
+			}
+		}
+		XFree(data);
+		offset += nitems;
+		length = MIN(length, bytes_left / 4);
+	}
 }
 
 static void xft_alloc_color(const win_env_t *e, const char *name, XftColor *col)
@@ -112,6 +145,11 @@ static const char *win_res(XrmDatabase db, const char *name, const char *def)
 	} else {
 		return def;
 	}
+}
+
+static unsigned int win_luminance(const XftColor *col)
+{
+	return (col->color.red + col->color.green + col->color.blue) / 3;
 }
 
 void win_init(win_t *win)
@@ -152,10 +190,13 @@ void win_init(win_t *win)
 	win_alloc_color(e, win_bg, &win->win_bg);
 	win_alloc_color(e, win_fg, &win->win_fg);
 	win_alloc_color(e, mrk_fg, &win->mrk_fg);
+	win_alloc_color(e, "black", &win->black);
+	win->light = win_luminance((XftColor*)&(win->win_bg)) > win_luminance((XftColor*)&(win->win_fg));
 
 #if HAVE_LIBFONTS
-	bar_bg = win_res(db, BAR_BG[0], BAR_BG[1] ? BAR_BG[1] : win_bg);
-	bar_fg = win_res(db, BAR_FG[0], BAR_FG[1] ? BAR_FG[1] : win_fg);
+	// ;madhu 210923 - bar foreground == win background and vice versa
+	bar_bg = win_res(db, BAR_BG[0], BAR_BG[1] ? BAR_BG[1] : win_fg);
+	bar_fg = win_res(db, BAR_FG[0], BAR_FG[1] ? BAR_FG[1] : win_bg);
 	xft_alloc_color(e, bar_bg, &win->bar_bg);
 	xft_alloc_color(e, bar_fg, &win->bar_fg);
 
@@ -182,6 +223,9 @@ void win_init(win_t *win)
 	INIT_ATOM_(UTF8_STRING);
 	INIT_ATOM_(WM_NAME);
 	INIT_ATOM_(WM_ICON_NAME);
+	INIT_ATOM_(_NET_SUPPORTED);
+
+	win_check_wm_support(e->dpy, RootWindow(e->dpy, e->scr));
 }
 
 void win_open(win_t *win)
@@ -203,6 +247,8 @@ void win_open(win_t *win)
 	XSetWindowAttributes attrs;
 	char res_class[] = RES_CLASS;
 	char res_name[] = "nsxiv";
+
+	Bool fullscreen = options->fullscreen && fs_support;
 
 	e = &win->env;
 	parent = options->embed ? options->embed : RootWindow(e->dpy, e->scr);
@@ -331,10 +377,15 @@ void win_open(win_t *win)
 	win->buf.pm = XCreatePixmap(e->dpy, win->xwin, win->buf.w, win->buf.h, e->depth);
 
 	XSetForeground(e->dpy, gc, win->win_bg.pixel);
+	XSetForeground(e->dpy, gc, fullscreen ? win->black.pixel : win->win_bg.pixel);
 	XFillRectangle(e->dpy, win->buf.pm, gc, 0, 0, win->buf.w, win->buf.h);
 	XSetWindowBackgroundPixmap(e->dpy, win->xwin, win->buf.pm);
 	XMapWindow(e->dpy, win->xwin);
 	XFlush(e->dpy);
+
+	if (fullscreen)
+		win_toggle_fullscreen(win);
+
 }
 
 CLEANUP void win_close(win_t *win)
@@ -372,6 +423,15 @@ void win_toggle_fullscreen(win_t *win)
 	XEvent ev;
 	XClientMessageEvent *cm;
 
+	if (!fs_support) {
+		if (!fs_warned) {
+			error(0, 0, "No fullscreen support");
+			fs_warned = True;
+		}
+		return;
+	}
+	win->fullscreen = !win->fullscreen;
+
 	memset(&ev, 0, sizeof(ev));
 	ev.type = ClientMessage;
 
@@ -379,8 +439,9 @@ void win_toggle_fullscreen(win_t *win)
 	cm->window = win->xwin;
 	cm->message_type = atoms[ATOM__NET_WM_STATE];
 	cm->format = 32;
-	cm->data.l[0] = 2; /* toggle */
+	cm->data.l[0] = win->fullscreen;
 	cm->data.l[1] = atoms[ATOM__NET_WM_STATE_FULLSCREEN];
+	cm->data.l[2] = cm->data.l[3] = 0;
 
 	XSendEvent(win->env.dpy, DefaultRootWindow(win->env.dpy), False,
 	           SubstructureNotifyMask | SubstructureRedirectMask, &ev);
@@ -408,7 +469,7 @@ void win_clear(win_t *win)
 		win->buf.pm = XCreatePixmap(e->dpy, win->xwin,
 		                            win->buf.w, win->buf.h, e->depth);
 	}
-	XSetForeground(e->dpy, gc, win->win_bg.pixel);
+	XSetForeground(e->dpy, gc, win->fullscreen ? win->black.pixel : win->win_bg.pixel);
 	XFillRectangle(e->dpy, win->buf.pm, gc, 0, 0, win->buf.w, win->buf.h);
 }
 

@@ -504,7 +504,7 @@ void img_render(img_t *img)
 			}
 			imlib_image_put_back_data(data);
 		} else {
-			XColor c = win->win_bg;
+			XColor c = win->fullscreen ? win->black : win->win_bg;
 			imlib_context_set_color(c.red >> 8, c.green >> 8, c.blue >> 8, 0xFF);
 			imlib_image_fill_rectangle(0, 0, dw, dh);
 		}
