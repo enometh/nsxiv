@@ -397,6 +397,7 @@ enum {
 	ATOM__NET_WM_STATE,
 	ATOM__NET_WM_PID,
 	ATOM__NET_WM_STATE_FULLSCREEN,
+	ATOM__NET_SUPPORTED,
 	ATOM_COUNT
 };
 
@@ -419,6 +420,8 @@ struct win {
 	Window xwin;
 	win_env_t env;
 
+	bool light; /* bg is lighter than fg */
+	XftColor black;
 	XftColor win_bg;
 	XftColor win_fg;
 	XftColor bar_bg;
@@ -430,6 +433,8 @@ struct win {
 	unsigned int w;
 	unsigned int h; /* = win height - bar height */
 	unsigned int bw;
+
+	bool fullscreen;
 
 	struct {
 		int w;

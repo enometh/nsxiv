@@ -778,7 +778,7 @@ void run(void)
 					} else {
 						tns.dirty = true;
 					}
-					if (!resized) {
+					if (!resized || win.fullscreen) {
 						redraw();
 						set_timeout(clear_resize, TO_REDRAW_RESIZE, false);
 						resized = true;
