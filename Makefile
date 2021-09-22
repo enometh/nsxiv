@@ -33,9 +33,11 @@ endif
 
 CPPFLAGS = -D_XOPEN_SOURCE=700 \
   -DHAVE_LIBGIF=$(HAVE_LIBGIF) -DHAVE_LIBEXIF=$(HAVE_LIBEXIF) \
+ `pkg-config --cflags librsvg-2.0 cairo` \
   -I/usr/include/freetype2 -I$(PREFIX)/include/freetype2
 
-LDLIBS = -lImlib2 -lX11 -lXft -lfontconfig $(OPTIONAL_LIBS)
+LDLIBS = -lImlib2 -lX11 -lXft -lfontconfig $(OPTIONAL_LIBS) \
+ `pkg-config --libs librsvg-2.0 cairo` \
 
 OBJS = autoreload_$(AUTORELOAD).o commands.o image.o main.o options.o \
   thumbs.o util.o window.o
