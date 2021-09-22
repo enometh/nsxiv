@@ -68,6 +68,14 @@ static const bool ALPHA_LAYER = false;
  */
 static const int CACHE_SIZE = 4 * 1024 * 1024; /* 4MiB */
 
+/* fallback height and width for svg documents.
+ * use these values in case svg document does not specify height and width.
+ */
+enum {
+	FB_SVG_HEIGHT = 512,
+	FB_SVG_WIDTH  = 512
+};
+
 #endif
 #ifdef _THUMBS_CONFIG
 
