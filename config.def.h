@@ -57,6 +57,14 @@ static const int CACHE_SIZE_MEM_PERCENTAGE = 3;          /* use 3% of total memo
 static const int CACHE_SIZE_LIMIT = 256 * 1024 * 1024;   /* but not above 256MiB */
 static const int CACHE_SIZE_FALLBACK = 32 * 1024 * 1024; /* fallback to 32MiB if we can't determine total memory */
 
+/* fallback height and width for svg documents.
+ * use these values in case svg document does not specify height and width.
+ */
+enum {
+	FB_SVG_HEIGHT = 512,
+	FB_SVG_WIDTH  = 512
+};
+
 #endif
 #ifdef INCLUDE_OPTIONS_CONFIG
 

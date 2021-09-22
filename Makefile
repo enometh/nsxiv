@@ -12,10 +12,12 @@ lib_exif_1 = -lexif
 nsxiv_cppflags = -D_XOPEN_SOURCE=700 \
   -DHAVE_LIBEXIF=$(HAVE_LIBEXIF) -DHAVE_LIBFONTS=$(HAVE_LIBFONTS) \
   -DHAVE_INOTIFY=$(HAVE_INOTIFY) $(inc_fonts_$(HAVE_LIBFONTS)) \
+ `pkg-config --cflags librsvg-2.0 cairo` \
   $(CPPFLAGS)
 
 nsxiv_ldlibs = -lImlib2 -lX11 \
   $(lib_exif_$(HAVE_LIBEXIF)) $(lib_fonts_$(HAVE_LIBFONTS)) \
+ `pkg-config --libs librsvg-2.0 cairo` \
   $(LDLIBS)
 
 objs = autoreload.o commands.o image.o main.o options.o \
