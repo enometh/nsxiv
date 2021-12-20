@@ -39,9 +39,11 @@
  */
 #define CLEANUP
 
+#ifndef __G_MACROS_H__
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 #define ABS(a) ((a) > 0 ? (a) : -(a))
+#endif
 
 #define ARRLEN(a) (sizeof(a) / sizeof((a)[0]))
 #define STREQ(s1,s2) (strcmp((s1), (s2)) == 0)
