@@ -90,6 +90,12 @@ Write list of all marked files to standard output when quitting. In combination
 with
 .B "\-i, \-\-stdin"
 nsxiv can be used as a visual filter/pipe.
+
+MODIFIED. By default if any files are marked they are written to
+stdout. Instead if this option is present it inhibits the verbose
+printf messages sent to stderr when the the user toggles an image
+mark.
+
 .TP
 .B "\-p, \-\-private"
 Enable private mode, in which nsxiv does not write any cache or temporary files.
@@ -218,6 +224,11 @@ Zoom out.
 .TP
 .B m
 Mark/unmark the current image.
+
+MODIFIED. By default this also prints a message to stderr with the
+line number, action (`m'arked or `u'nmarked) and filename of the image
+being marked. To disable this use the -o option.
+
 .TP
 .B M
 Mark/unmark all images starting from the last marked/unmarked image up to the
