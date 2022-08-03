@@ -50,7 +50,7 @@ bool cg_quit(arg_t status)
 {
 	unsigned int i;
 
-	if (options->to_stdout && markcnt > 0) {
+	if (/* options->to_stdout && */ markcnt > 0) {
 		for (i = 0; i < (unsigned int)filecnt; i++) {
 			if (files[i].flags & FF_MARK)
 				printf("%s%c", files[i].name, options->using_null ? '\0' : '\n');
@@ -190,6 +190,9 @@ bool cg_zoom(arg_t d)
 
 bool cg_toggle_image_mark(arg_t _)
 {
+	if (!options->to_stdout)
+		fprintf(stderr, "%d %c %s%c", fileidx, !(files[fileidx].flags & FF_MARK) ? 'm' : 'u', files[fileidx].name, options->using_null ? '\0' : '\n');
+
 	return mark_image(fileidx, !(files[fileidx].flags & FF_MARK));
 }
 
