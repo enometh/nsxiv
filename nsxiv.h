@@ -171,6 +171,7 @@ typedef keymap_t button_t;
 #ifndef HAVE_IMLIB2_MULTI_FRAME
 	#define HAVE_IMLIB2_MULTI_FRAME 0
 #endif
+//#undef HAVE_IMLIB2_MULTI_FRAME
 
 typedef struct {
 	Imlib_Image im;
