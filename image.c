@@ -730,6 +730,10 @@ static double steps_to_range(int d, double max, double offset)
 
 void img_update_color_modifiers(img_t *img)
 {
+	if (imlib_context_get_color_modifier() == NULL) {
+		fprintf(stderr, "BUG: multi frame reset imlib color modifier to NULL?\n");
+		imlib_context_set_color_modifier(img->cmod);
+	}
 	assert(imlib_context_get_color_modifier() == img->cmod);
 	imlib_reset_color_modifier();
 
