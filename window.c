@@ -173,9 +173,17 @@ void win_init(win_t *win)
 	e->scr = DefaultScreen(e->dpy);
 	e->scrw = DisplayWidth(e->dpy, e->scr);
 	e->scrh = DisplayHeight(e->dpy, e->scr);
-	e->depth = DefaultDepth(e->dpy, e->scr);
-	e->vis = DefaultVisual(e->dpy, e->scr);
-	e->cmap = DefaultColormap(e->dpy, e->scr);
+	e->depth = 32;
+	XVisualInfo vinfo;
+	if (XMatchVisualInfo(e->dpy, e->scr, 32, TrueColor, &vinfo) != True) {
+		fprintf(stderr, "32 bit truecolor visual fail\n");
+		e->vis = DefaultVisual(e->dpy, e->scr);
+		e->depth = DefaultDepth(e->dpy, e->scr);
+		e->cmap = DefaultColormap(e->dpy, e->scr);
+	} else {
+		e->cmap = XCreateColormap(e->dpy, DefaultRootWindow(e->dpy), vinfo.visual, AllocNone);
+		e->vis = vinfo.visual;
+	}
 
 	if (setlocale(LC_CTYPE, "") == NULL || XSupportsLocale() == 0)
 		error(0, 0, "No locale support");

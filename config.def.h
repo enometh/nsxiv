@@ -63,12 +63,13 @@ static const int CACHE_SIZE_FALLBACK = 32 * 1024 * 1024; /* fallback to 32MiB if
 /* if false, pixelate images at zoom level != 100%,
  * toggled with 'a' key binding (overwritten via `--anti-alias` option)
  */
-static const bool ANTI_ALIAS = true;
+//static const bool ANTI_ALIAS = true;
+static const bool ANTI_ALIAS = false; //;madhu 231218 - needed for depth 32 TrueColor visuals, figure out why.
 
 /* if true, use a checkerboard background for alpha layer,
  * toggled with 'A' key binding (overwritten via `--alpha-layer` option)
  */
-static const bool ALPHA_LAYER = false;
+static const bool ALPHA_LAYER = true; //;madhu 231218
 
 /* list of whitelisted/blacklisted directory for thumbnail cache
  * (overwritten via --cache-{allow,deny} option).
