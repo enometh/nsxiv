@@ -152,6 +152,39 @@ static unsigned int win_luminance(const XftColor *col)
 	return (col->color.red + col->color.green + col->color.blue) / 3;
 }
 
+static void debug_color(char *str, XColor *col) {
+	fprintf(stderr, "%s: r=%d g=%d b=%d pixel=%lu\n", str, col->red, col->green, col->blue, col->pixel);
+}
+
+static unsigned long apply_alpha(unsigned long dest_pixel, unsigned long alpha) {
+	return (dest_pixel & 0x00ffffffU) | (alpha << 24);
+}
+
+static unsigned int parse_alpha(XrmDatabase db)
+{
+    const char *hex, *str = win_res(db, ALPHA[0], ALPHA[1]);
+    unsigned int parsed_alpha = 0, fail = 1;
+    if (str) {
+	if ((hex = strstr(str,"0x"))) {
+	    int ret;
+	    if ((ret = sscanf(hex, "%x", &parsed_alpha)) == 1) {
+	    } else if (ret == EOF) {
+	    } else {
+	    }
+	} else {
+	    parsed_alpha = atoi(str);
+	}
+	if (parsed_alpha >= 0 && parsed_alpha <= 255)
+	    fail = 0;
+    }
+    int ret = 0xff;
+    if (fail) {
+	fprintf(stderr, "parse_alpha failed to parse %s as a [hexa]decimal number between 0 and 255. Using default %d\n", str, ret);
+	return ret;
+    }
+    return parsed_alpha;;
+}
+
 void win_init(win_t *win)
 {
 	win_env_t *e;
@@ -200,6 +233,17 @@ void win_init(win_t *win)
 	win_alloc_color(e, mrk_fg, &win->mrk_fg);
 	win_alloc_color(e, "black", &win->black);
 	win->light = win_luminance((XftColor*)&(win->win_bg)) > win_luminance((XftColor*)&(win->win_fg));
+
+//	debug_color("winbg before", &win->win_bg);
+//	debug_color("black before", &win->black);
+
+	unsigned int alpha = parse_alpha(db);
+
+	win->win_bg.pixel = apply_alpha(win->win_bg.pixel, alpha);
+	win->black.pixel = apply_alpha(win->black.pixel, alpha);
+
+//	debug_color("winbg after", &win->win_bg);
+//	debug_color("black after", &win->black);
 
 #if HAVE_LIBFONTS
 	// ;madhu 210923 - bar foreground == win background and vice versa
