@@ -19,6 +19,8 @@ static const char *BAR_FONT[] = { "Nsxiv.bar.font",            "monospace-8" };
 static const bool TOP_STATUSBAR = false;
 #endif /* HAVE_LIBFONTS */
 
+static const char *ALPHA[]      = { "Nsxiv.alpha",               "0x30" };
+
 #endif
 #ifdef INCLUDE_IMAGE_CONFIG
 
