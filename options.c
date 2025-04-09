@@ -157,6 +157,7 @@ void parse_options(int argc, char **argv)
 	_options.hide_bar = false;
 	_options.geometry = NULL;
 	_options.res_name = NULL;
+	_options.res_class = NULL;
 
 	_options.tns_filters = TNS_FILTERS;
 	_options.tns_filters_is_blacklist = TNS_FILTERS_IS_BLACKLIST;
@@ -229,7 +230,11 @@ void parse_options(int argc, char **argv)
 			_options.startnum = n - 1;
 			break;
 		case OPT_CLASS:
+#if 0 // ;madhu 250409 support --class, MIGRATIONS.md only talks about overriding the class, not the name
 			error(0, 0, "--class is deprecated, use --name instead");
+#endif
+			_options.res_class = op.optarg;
+
 			/* fallthrough */
 		case 'N':
 			_options.res_name = op.optarg;

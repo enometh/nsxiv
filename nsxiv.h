@@ -273,6 +273,7 @@ struct opt {
 	Window embed;
 	char *geometry;
 	char *res_name;
+	char *res_class;
 
 	/* misc flags: */
 	const char *tns_filters;
