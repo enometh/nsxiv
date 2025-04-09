@@ -399,7 +399,7 @@ void win_open(win_t *win)
 	free(icon_data);
 
 	win_set_title(win, res_name, strlen(res_name));
-	classhint.res_class = res_class;
+	classhint.res_class = options->res_class != NULL ? options->res_class : res_class;
 	classhint.res_name = options->res_name != NULL ? options->res_name : res_name;
 	XSetClassHint(e->dpy, win->xwin, &classhint);
 
