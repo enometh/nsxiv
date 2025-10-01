@@ -135,7 +135,8 @@ static void check_add_file(const char *filename, bool given)
 		return;
 
 	if (access(filename, R_OK) < 0 ||
-	    (path = realpath(filename, NULL)) == NULL)
+	     ((path = (filename[0]) == '/' ? strdup(filename) :
+	       realpath(filename, NULL)) == NULL))
 	{
 		if (given)
 			error(0, errno, "%s", filename);
